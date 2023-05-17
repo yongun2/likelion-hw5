@@ -8,29 +8,27 @@ class PostModelSerializer(serializers.ModelSerializer):
         model = Post
         fields = "__all__"
 
-def calculate(request):
-    # 1. 데이터 확인
-    num1 = request.GET.get("num1", 0)
-    num2 = request.GET.get("num2", 0)
-    operators = request.GET.get("operators")
-    
-    # 2. 계산
-    if operators == "+":
-        result = int(num1) + int(num2)
-    elif operators == "-":
-        result = int(num1) - int(num2)
-    elif operators == "*":
-        result = int(num1) * int(num2)
-    elif operators == "/":
-        result = int(num1) / int(num2)
-    else:
-        result = 0
-    
-    data  = {
-        "type": "FBV",
-        "result": result
-    }
+class PostListModelSerializer(PostModelSerializer):
+    class Meta(PostModelSerializer.Meta):
+        fields = [
+            'id',
+            'image',
+            'created_at',
+            'view_count',
+            'writer'
+        ]
 
-    # 3. 응답
-    return Response(data=data, status=status.HTTP_200_OK)
+class PostCreateModelSerializer(PostModelSerializer):
+    class Meta(PostModelSerializer.Meta):
+        fields = [
+            'image',
+            'content'
+        ]
 
+class PostDetailModelSerializer(PostModelSerializer):
+    pass
+
+class PostHypelinkModelSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Post
+        fields = '__all__'
